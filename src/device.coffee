@@ -47,7 +47,9 @@ class DeviceManager extends Bacon.EventStream
         sink? new Bacon.Next(event)
     services = new Bacon.Bus()
     services.plug Bacon.once(Date.now()).concat(Bacon.fromPoll(interval, -> Date.now())).flatMap (now) ->
-      Bacon.mergeAll(DeviceStatusService.findServices(), MessagingService.findServices())
+      Bacon.mergeAll(
+        DeviceStatusService.findServices(),
+        MessagingService.findServices())
     services
       .flatMap (service) ->
         Bacon.fromPromise(service.bindService())
