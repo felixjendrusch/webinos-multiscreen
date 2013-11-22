@@ -119,7 +119,7 @@ class Device extends Bacon.EventStream
           aspect: 'Device'
           property: 'type'
         ).then (value) =>
-          type = if value is 'smartphone' then 'phone' else value
+          type = value
           sink? new Bacon.Next(new Changed(this))
     @address = -> address
     @isLocal = -> address is webinos.session.getServiceLocation()
