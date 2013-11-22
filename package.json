@@ -1,0 +1,35 @@
+{
+  "name": "webinos-multiscreen",
+  "version": "1.0.0",
+  "description": "webinos multiscreen app",
+  "keywords": [
+    "webinos",
+    "multiscreen"
+  ],
+  "homepage": "http://www.webinos.org",
+  "bugs": "https://github.com/felixjendrusch/webinos-multiscreen",
+  "author": {
+    "name": "Felix-Johannes Jendrusch",
+    "email": "felix@felixjendrusch.is"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felixjendrusch/webinos-multiscreen.git"
+  },
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "coffee-script": "~1.6.3",
+    "underscore": "~1.5.2",
+    "baconjs": "~0.6.22",
+    "bacon.jquery": "~0.3.13",
+    "coffeeify": "~0.5.2",
+    "browserify": "~2.35.1",
+    "browserify-shim": "~2.0.8",
+    "grunt": "~0.4.1",
+    "grunt-browserify": "~1.2.11",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-watch": "~0.5.3"
+  }
+}
