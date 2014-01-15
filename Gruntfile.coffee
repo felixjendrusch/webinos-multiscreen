@@ -72,7 +72,7 @@ module.exports = (grunt) ->
           'dist/screen.js':  'dist/screen.js'
 
     watch:
-      app:
+      all:
         files: ['src/**/*.coffee', 'src/**/*.js']
         tasks: ['browserify:app', 'browserify:screen', 'browserify:lib', 'browserify:defaultRemoteDisplay']
 

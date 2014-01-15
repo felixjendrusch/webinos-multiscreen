@@ -47,7 +47,9 @@ class DeviceManager extends Bacon.EventStream
         sink? new Bacon.Next(event)
     services = new Bacon.Bus()
     services.plug Bacon.once(Date.now()).concat(Bacon.fromPoll(interval, -> Date.now())).flatMap (now) ->
-      Bacon.mergeAll(DeviceStatusService.findServices(), MessagingService.findServices())
+      Bacon.mergeAll(
+        DeviceStatusService.findServices(),
+        MessagingService.findServices())
     services
       .flatMap (service) ->
         Bacon.fromPromise(service.bindService())
@@ -117,7 +119,7 @@ class Device extends Bacon.EventStream
           aspect: 'Device'
           property: 'type'
         ).then (value) =>
-          type = if value is 'smartphone' then 'phone' else value
+          type = value
           sink? new Bacon.Next(new Changed(this))
     @address = -> address
     @isLocal = -> address is webinos.session.getServiceLocation()
