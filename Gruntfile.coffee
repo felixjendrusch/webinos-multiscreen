@@ -81,5 +81,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
-  grunt.registerTask 'dist', ['clean:dist', 'browserify:wrt', 'browserify:deps', 'browserify:app', 'browserify:screen', 'browserify:lib']
+  grunt.registerTask 'dist', ['clean:dist', 'browserify:wrt', 'browserify:deps', 'browserify:app', 'browserify:screen', 'browserify:lib', 'browserify:defaultRemoteDisplay']
   grunt.registerTask 'default', ['dist']
