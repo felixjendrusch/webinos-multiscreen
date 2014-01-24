@@ -14,9 +14,10 @@ $(document).ready ->
 		$('#connectedDisplays').empty()
 		for display in rd.getConnectedDisplays()
 			$('#connectedDisplays').append "<option value=" + display.id + ">" + display.id + "</option>"
-	
+
 	receiveMsg = (msg) ->
-		$('#textArea').append msg
+		textArea = $('#textArea')
+		textArea.val textArea.val() + msg + "\n"
 
 
 	rd = new RemoteDisplayLib()
@@ -25,8 +26,12 @@ $(document).ready ->
 
 	$('#remoteDisplayTable').on "click", ".connectButton", ->
 		newDisplay = rd.connectToRemoteDisplay connectedToDisplay, $(this).attr("value")
-		newDisplay.addEventListener "message", receiveMsg
-		cd.push newDisplay
+		if newDisplay?	
+			newDisplay.addEventListener "message", receiveMsg
+			cd.push newDisplay
+
+	$('.disconnectButton').on "click", ->
+		rd.disconnectFromRemoteDisplay connectedToDisplay, $('#connectedDisplays option:selected').attr("value")
 
 	$('#sendMsgButton').on "click", ->
 		for display in rd.getConnectedDisplays()

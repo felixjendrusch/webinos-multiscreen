@@ -40,14 +40,6 @@ module.exports = (grunt) ->
           shim: shim
           external: deps.concat _.pluck(shim, 'path')
 
-      screen:
-        src: ['src/screen.coffee']
-        dest: 'dist/screen.js'
-        options:
-          transform: ['coffeeify']
-          shim: shim
-          external: deps.concat _.pluck(shim, 'path')
-
       lib:
         src: ['src/lib.coffee']
         dest: 'dist/lib.js'
@@ -60,6 +52,12 @@ module.exports = (grunt) ->
         options:
           transform: ['coffeeify']
 
+      chat:
+        src: ['src/chat.coffee']
+        dest: 'dist/chat.js'
+        options:
+          transform: ['coffeeify']
+
     clean:
       dist: ['dist']
 
@@ -69,17 +67,16 @@ module.exports = (grunt) ->
           'dist/wrt.js':  'dist/wrt.js'
           'dist/deps.js': 'dist/deps.js'
           'dist/app.js':  'dist/app.js'
-          'dist/screen.js':  'dist/screen.js'
 
     watch:
       all:
         files: ['src/**/*.coffee', 'src/**/*.js']
-        tasks: ['browserify:app', 'browserify:screen', 'browserify:lib', 'browserify:defaultRemoteDisplay']
+        tasks: ['browserify:app', 'browserify:defaultRemoteDisplay', 'browserify:chat']
 
   grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
-  grunt.registerTask 'dist', ['clean:dist', 'browserify:wrt', 'browserify:deps', 'browserify:app', 'browserify:screen', 'browserify:lib', 'browserify:defaultRemoteDisplay']
+  grunt.registerTask 'dist', ['clean:dist', 'browserify:wrt', 'browserify:deps', 'browserify:app', 'browserify:defaultRemoteDisplay']
   grunt.registerTask 'default', ['dist']

@@ -11,9 +11,9 @@
 				top: 0; left: 0; right: 0; bottom: 0;
 			}
 			input{width: 300px;}
+			textarea{width: 350px; height: 200px;}
 		</style>
 		<script type="text/javascript" src="vendor/jquery.js"></script>
-		<script type="text/javascript" src="dist/lib.js"></script>
 		<script type="text/javascript" src="dist/defaultRemoteDisplay.js"></script>
 	</head>
 
@@ -34,8 +34,8 @@
 		<br>
 		<div>
 			<p>connectedDisplays: 
-				<select id="connectedDisplays">
-				</select>
+				<select id="connectedDisplays"></select>
+				<button class='disconnectButton'>disconnect...</button>
 			</p>
 			<p>msg: <input id="msg" type="text"></p>
 			<p>msgType: 

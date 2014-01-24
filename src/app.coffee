@@ -5,23 +5,28 @@ DeviceManager = require('./device.coffee')
 $(document).ready ->
 	remoteDisplays = []
 	port =[]
+	firstTime = true
 	manager = new DeviceManager()
 	manager
 		.toProperty()
 		.map (devices) ->
 			_.chain(devices).map((device) -> device.peers()).flatten().value()
 		.onValue (peers) ->
-			remoteDisplays = peers
+			remoteDisplays = []
 			for peer in peers
 				if peer.isLocal()
-					peer.messages().onValue (msg) ->+
-						if msg.type is "remoteDisplay"
-							switch
-								when msg.content[0] is "url"
-									$('#ifr').attr('src', msg.content[1])
+					if firstTime
+						firstTime = false
+						peer.messages().onValue (msg) ->
+							if msg.type is "remoteDisplay"
+								switch
+									when msg.content[0] is "url"
+										$('#ifr').attr('src', msg.content[1])
 
-								when msg.content[0] is "msg"
-									port.postMessage ["receiveMsg", msg.from.id, msg.content[1]]
+									when msg.content[0] is "msg"
+										port.postMessage ["receiveMsg", msg.from.id, msg.content[1]]
+				else
+					remoteDisplays.push peer
 
 
 	normalizePeers = (peers) ->
@@ -56,3 +61,11 @@ $(document).ready ->
 
 
 
+# peer.messages().onValue (msg) ->
+# 						if msg.type is "remoteDisplay"
+# 							switch
+# 								when msg.content[0] is "url"
+# 									$('#ifr').attr('src', msg.content[1])
+
+# 								when msg.content[0] is "msg"
+# 									port.postMessage ["receiveMsg", msg.from.id, msg.content[1]]

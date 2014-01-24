@@ -15,7 +15,7 @@ class RemoteDisplayLib
 					@availableDisplays = []
 					for display in evt.data[1]
 						@availableDisplays.push new RemoteDisplay(@, display.id, display.address, display.displayName)
-					@grdCB? evt.data[1]
+					@grdCB? @availableDisplays
 
 					window.clearTimeout(@refreshTimer)
 					@refreshTimer = window.setTimeout( =>
@@ -35,13 +35,16 @@ class RemoteDisplayLib
 	connectToRemoteDisplay: (@ctrdCB, id) =>
 		for display in @availableDisplays
 			if display.id is id
-				@connectedDisplays.push display
-				@ctrdCB?()
-				return display
+				if $.inArray(display, @connectedDisplays) is -1
+					@connectedDisplays.push display
+					@ctrdCB?()
+					return display
+				else return null
 
 	disconnectFromRemoteDisplay: (@dfrdCB, id) =>
 		for display in @connectedDisplays
 			if display.id is id
+				console.log id
 				@connectedDisplays.remove display
 				@dfrdCB?()
 
@@ -74,5 +77,6 @@ class RemoteDisplay
 	handleEvent: (evt) ->
 		@handler?(evt)
 
+Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
 
 module.exports = RemoteDisplayLib
