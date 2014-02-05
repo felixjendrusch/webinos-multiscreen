@@ -12,10 +12,30 @@ class RemoteDisplayLib
 			console.log("lib onmessage " + evt.data[0], evt.data[1])
 			switch
 				when evt.data[0] is "displayList"
-					@availableDisplays = []
-					for display in evt.data[1]
-						@availableDisplays.push new RemoteDisplay(@, display.id, display.address, display.displayName)
+					newAvailableDisplay = []
+					for actualDisplay in evt.data[1]
+						alreadyListed = null
+						for display in @availableDisplays
+							if actualDisplay.id is display.id
+								alreadyListed = display
+						if alreadyListed
+							newAvailableDisplay.push alreadyListed
+						else
+							newAvailableDisplay.push new RemoteDisplay(@, actualDisplay.id, actualDisplay.address, actualDisplay.displayName)
+
+					@availableDisplays = newAvailableDisplay
 					@grdCB? @availableDisplays
+
+					connectedTemp = @connectedDisplays.slice()
+					for connectedDisplay in connectedTemp
+						stillConnected = false
+						for availableDisplay in @availableDisplays
+							if connectedDisplay.id is availableDisplay.id
+								stillConnected = true
+						if !stillConnected
+							@connectedDisplays.splice @connectedDisplays.indexOf(connectedDisplay), 1
+							@ctrdCB?()
+
 
 					window.clearTimeout(@refreshTimer)
 					@refreshTimer = window.setTimeout( =>
@@ -32,16 +52,16 @@ class RemoteDisplayLib
 	getRemoteDisplays: (@grdCB) =>
 		@port.postMessage ["getRemoteDisplays"]
 
-	connectToRemoteDisplay: (@ctrdCB, id) =>
+	connectToRemoteDisplay: (id, @ctrdCB) =>
 		for display in @availableDisplays
 			if display.id is id
-				if $.inArray(display, @connectedDisplays) is -1
+				if @connectedDisplays.indexOf(display) is -1
 					@connectedDisplays.push display
 					@ctrdCB?()
 					return display
 				else return null
 
-	disconnectFromRemoteDisplay: (@dfrdCB, id) =>
+	disconnectFromRemoteDisplay: (id, @dfrdCB) =>
 		for display in @connectedDisplays
 			if display.id is id
 				console.log id
@@ -56,7 +76,6 @@ class RemoteDisplayLib
 
 	sendMsg: (id, msgType, msg) =>
 		@port.postMessage ["sendMsg", id, msgType, msg]
-		console.log "msg send lib"
 
 
 class RemoteDisplay
@@ -72,11 +91,14 @@ class RemoteDisplay
 	openUrl: (url) ->
 		@rdLib.sendMsg @id, "url", url
 
+	identify: (identNo)->
+		@rdLib.sendMsg @id, "identify", identNo
+
 	addEventListener: (type, @handler) ->
 
 	handleEvent: (evt) ->
 		@handler?(evt)
 
-Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
 
 module.exports = RemoteDisplayLib
+window.RemoteDisplayLib = RemoteDisplayLib

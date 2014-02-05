@@ -1,11 +1,13 @@
 _ = require('underscore')
-
+address = require('./util/address.coffee');
 DeviceManager = require('./device.coffee')
 
 $(document).ready ->
 	remoteDisplays = []
 	port =[]
 	firstTime = true
+	$('#identify').css "font-size", $('#ifr').height()*0.9
+
 	manager = new DeviceManager()
 	manager
 		.toProperty()
@@ -25,6 +27,14 @@ $(document).ready ->
 
 									when msg.content[0] is "msg"
 										port.postMessage ["receiveMsg", msg.from.id, msg.content[1]]
+
+									when msg.content[0] is "identify"
+										$('#identify').text msg.content[1]
+										$('#ifr').css "display", "none"
+										setTimeout ->
+											$('#identify').text ""
+											$('#ifr').css "display", "inherit"
+										, 1000
 				else
 					remoteDisplays.push peer
 
@@ -32,15 +42,18 @@ $(document).ready ->
 	normalizePeers = (peers) ->
 		normalizedPeers = []
 		for peer in peers
+			console.log(peer);
 			normalizedPeers.push
 				address: peer.address()
-				displayName: peer.displayName()
+				displayName: address.friendlyName(peer.address());
 				id: peer.id()
+				type: peer.dtype()
 		normalizedPeers
 
 
 	window.addEventListener 'message', (evt) =>
-		if evt.origin is 'http://localhost:8080' and evt.data is "rdInit" and evt.ports?
+		# evt.origin is 'http://localhost:8080' and
+		if evt.data is "rdInit" and evt.ports?
 			port = evt.ports[0]
 			port.onmessage = (evt) =>
 				console.log "app onmessage " + evt.data[0]
@@ -53,19 +66,3 @@ $(document).ready ->
 							if peer.id() is evt.data[1]
 								peer.send "remoteDisplay", [evt.data[2], evt.data[3]]
 
-
-
-
-
-
-
-
-
-# peer.messages().onValue (msg) ->
-# 						if msg.type is "remoteDisplay"
-# 							switch
-# 								when msg.content[0] is "url"
-# 									$('#ifr').attr('src', msg.content[1])
-
-# 								when msg.content[0] is "msg"
-# 									port.postMessage ["receiveMsg", msg.from.id, msg.content[1]]

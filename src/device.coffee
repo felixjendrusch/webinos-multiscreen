@@ -32,7 +32,7 @@ class DeviceManager extends Bacon.EventStream
               .mapError((service) -> service.searchForChannels('urn:webinos:multiscreen'))
               .flatMap(_.identity)
               .flatMap((channel) -> Bacon.fromPromise(channel.connect()))
-              .flatMap((channel) -> PeerService.findServices(channel))
+              .flatMap((channel) -> PeerService.findServices(channel, device.type()))
           if device.devicestatus()?
             sink? new Bacon.Next(new Changed(device))
       else if event.isUnavailable()

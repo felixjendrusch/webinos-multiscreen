@@ -8,7 +8,7 @@ Bacon = require('baconjs')
 Service = require('./service.coffee')
 
 class PeerService extends Service
-  @findServices: (channel, options = {interval: 5000}) ->
+  @findServices: (channel, dtype, options = {interval: 5000}) ->
     new Bacon.EventStream (newSink) ->
       sink = (event) ->
         reply = newSink event
@@ -21,7 +21,7 @@ class PeerService extends Service
       if channel.connected()
         channel.onValue (event) ->
           if event.isMessage() and event.message().type is 'hello'
-            sink? new Bacon.Next(PeerService.create(channel, event.message().from))
+            sink? new Bacon.Next(PeerService.create(channel, event.message().from, dtype))
           else if event.isDisconnect()
             sink? new Bacon.End()
         if channel.service().address() is address.generalize(webinos.session.getServiceLocation())
@@ -33,12 +33,12 @@ class PeerService extends Service
       else if channel.disconnected()
         sink? new Bacon.End()
       unsub
-  @create: (channel, peer) ->
+  @create: (channel, peer, dtype) ->
     if LocalPeerService.isLocalPeer(peer)
-      new LocalPeerService(channel, peer)
+      new LocalPeerService(channel, peer, dtype)
     else
-      new RemotePeerService(channel, peer)
-  constructor: (channel, peer) ->
+      new RemotePeerService(channel, peer, dtype)
+  constructor: (channel, peer, dtype) ->
     messages = new Bacon.Bus()
     messages.plug channel
       .filter (event) ->
@@ -54,6 +54,7 @@ class PeerService extends Service
     channel.filter('.isDisconnect').onValue => @unbindService()
     @channel = -> channel
     @messages = -> messages
+    @dtype = -> dtype
     @send = (type, content) ->
       channel.send({
         from: LocalPeerService.localPeer()
