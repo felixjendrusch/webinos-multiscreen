@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<widget xmlns="http://www.w3.org/ns/widgets" id="http://www.webinos.org/rd" version="1.0" height="450" width="700">
+  <!-- Name of the widget -->
+  <name>webinos Remote Display</name>
+  <!-- Description is shown when installing widget -->
+  <description>The remote display app.</description>
+  <!-- Start page for widget -->
+  <content src="rdIndex.html" />
+  <!-- Widget author -->
+  <author href="http://www.webinos.org" email="thomas.troellmich@fokus.fraunhofer.de">Thomas Tröllmich</author>
+  <feature name="http://webinos.org/api/app2app" required="false"/>
+  <feature name="http://webinos.org/api/devicestatus" required="false"/>
+  <icon src="icon.png" />
+  <!-- Distributed under the Apache 2.0 licence -->
+  <license href="http://www.apache.org/licenses/LICENSE-2.0.html">Distributed under the Apache 2.0 License.</license>
+</widget>

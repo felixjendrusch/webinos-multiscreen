@@ -3,9 +3,6 @@ _ = require 'underscore'
 module.exports = (grunt) ->
   deps = ['underscore', 'baconjs', 'bacon.jquery']
   shim =
-    webinos:
-      path: 'vendor/webinos.js'
-      exports: 'webinos'
     promise:
       path: 'vendor/promise.js'
       exports: 'Promise'
@@ -17,13 +14,6 @@ module.exports = (grunt) ->
     browserify:
       options:
         debug: no # yes
-
-      wrt:
-        src: []
-        dest: 'dist/wrt.js'
-        options:
-          shim: _.pick(shim, 'webinos')
-          ignore: ['crypto', 'path', './logging.js', './registry.js', 'webinos-utilities']
 
       deps:
         src: []
@@ -64,7 +54,6 @@ module.exports = (grunt) ->
     uglify:
       dist:
         files:
-          'dist/wrt.js':  'dist/wrt.js'
           'dist/deps.js': 'dist/deps.js'
           'dist/rdIndex.js':  'dist/rdIndex.js'
 
@@ -78,5 +67,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
-  grunt.registerTask 'dist', ['clean:dist', 'browserify:wrt', 'browserify:deps', 'browserify:rdIndex', 'browserify:lib', 'browserify:defaultRemoteDisplay', 'browserify:coffeeChat']
+  grunt.registerTask 'dist', ['clean:dist', 'browserify:deps', 'browserify:rdIndex', 'browserify:lib', 'browserify:defaultRemoteDisplay', 'browserify:coffeeChat']
   grunt.registerTask 'default', ['dist']
