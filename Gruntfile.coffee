@@ -42,7 +42,7 @@ module.exports = (grunt) ->
 
       lib:
         src: ['src/lib.coffee']
-        dest: 'dist/RemoteDisplayLib.js'
+        dest: 'dist/remotedisplaylib.js'
         options:
           transform: ['coffeeify']
 
