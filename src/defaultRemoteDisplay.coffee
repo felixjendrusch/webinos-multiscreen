@@ -3,8 +3,6 @@ RemoteDisplayLib = require('./lib.coffee')
 
 $(document).ready ->
 
-	cd = []
-
 	showRemoteDisplayList = (remoteDisplays) ->
 		$('#remoteDisplayTable > tbody:last').empty()
 		for display, i in remoteDisplays
@@ -18,6 +16,7 @@ $(document).ready ->
 	receiveMsg = (msg) ->
 		textArea = $('#textArea')
 		textArea.val textArea.val() + msg + "\n"
+		textArea.scrollTop textArea.prop('scrollHeight')
 
 
 	rd = new RemoteDisplayLib()
@@ -28,10 +27,12 @@ $(document).ready ->
 		newDisplay = rd.connectToRemoteDisplay $(this).attr("value"), connectedToDisplay
 		if newDisplay?
 			newDisplay.addEventListener "message", receiveMsg
-			cd.push newDisplay
 
-	$('.disconnectButton').on "click", ->
+	$('#disconnectButton').on "click", ->
 		rd.disconnectFromRemoteDisplay $('#connectedDisplays option:selected').attr("value"), connectedToDisplay
+
+	$('#controlButton').on "click", ->
+		rd.controlRemoteDisplay $('#connectedDisplays option:selected').attr("value")
 
 	$('#sendMsgButton').on "click", ->
 		for display in rd.getConnectedDisplays()
@@ -44,3 +45,14 @@ $(document).ready ->
 	$('#identifyButton').on "click", ->
 		for display, i in rd.getAvailableDisplays()
 			display.identify ++i
+
+	$('#scgButton').on "click", ->
+		for display in rd.getConnectedDisplays()
+			if display.id is $('#connectedDisplays option:selected').attr("value")
+				display.openUrl "http://localhost:3008"
+				
+	$('#scgrButton').on "click", ->
+		for display in rd.getConnectedDisplays()
+			if display.id is $('#connectedDisplays option:selected').attr("value")
+				display.openUrl "http://localhost:3008/rd/smartcityremote.html"
+

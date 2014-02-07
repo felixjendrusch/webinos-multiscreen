@@ -64,9 +64,15 @@ class RemoteDisplayLib
 	disconnectFromRemoteDisplay: (id, @dfrdCB) =>
 		for display in @connectedDisplays
 			if display.id is id
-				console.log id
-				@connectedDisplays.remove display
+				@connectedDisplays.splice @connectedDisplays.indexOf(display), 1
 				@dfrdCB?()
+
+	controlRemoteDisplay: (id) =>
+		for display in @connectedDisplays
+			if display.id is id
+				@port.postMessage ["control", id]
+
+
 
 	getAvailableDisplays:  =>
 		@availableDisplays
