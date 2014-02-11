@@ -3,6 +3,13 @@ address = require('./util/address.coffee');
 DeviceManager = require('./device.coffee')
 
 $(document).ready ->
+	curtime = Date.now()
+	lastEvent  = {
+				posX: 0
+				posY: 0
+				rotarotation: 1
+				scale: 1
+			}
 	remoteDisplays = []
 	port =[]
 	firstTime = true
@@ -12,6 +19,16 @@ $(document).ready ->
 	$('#cancelControl').on "click", (event) ->
 		event.stopPropagation()
 		$('#control').css "z-index", "-1"
+
+	$('#resetControl').on "click", (event) ->
+		event.stopPropagation()
+		lastEvent = {
+				posX: 0
+				posY: 0
+				rotarotation: 1
+				scale: 1
+			}
+		activPeer.send "remoteDisplay", ["msg", lastEvent]	
 
 	manager = new DeviceManager()
 	manager
@@ -69,7 +86,7 @@ $(document).ready ->
 		scale=last_scale=1
 		rotation=last_rotation=1
 
-		hammertime.on "drag transform", (event) ->
+		hammertime.on "drag transform release", (event) ->
 			touches = event.gesture.touches
 			switch event.type
 				when 'drag'
@@ -79,15 +96,24 @@ $(document).ready ->
 				when 'transform'
 					rotation = event.gesture.rotation
 					scale = event.gesture.scale
+
+				when 'release'
+					lastposX=posX
+					lastposY=posY
 # 
 			eventData = {
 				posX: posX
 				posY: posY
-				rotarotation: rotation
+				rotation: rotation
 				scale: scale
 			}
-			console.log eventData
-			activPeer.send "remoteDisplay", ["msg", eventData]
+			lastEvent.posX = eventData.posX
+			lastEvent.posY = eventData.posY
+			lastEvent.rotation = eventData.rotation
+			lastEvent.scale = eventData.scale
+			if(curtime<Date.now()-100)
+				curtime = Date.now()
+				activPeer.send "remoteDisplay", ["msg", lastEvent]
 
 
 	normalizePeers = (peers) ->

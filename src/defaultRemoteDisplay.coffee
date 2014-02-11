@@ -15,7 +15,7 @@ $(document).ready ->
 
 	receiveMsg = (msg) ->
 		textArea = $('#textArea')
-		textArea.val textArea.val() + msg + "\n"
+		textArea.val textArea.val() + JSON.parse(msg) + "\n"
 		textArea.scrollTop textArea.prop('scrollHeight')
 
 
