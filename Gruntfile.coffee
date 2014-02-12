@@ -68,4 +68,4 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
   grunt.registerTask 'dist', ['clean:dist', 'browserify:deps', 'browserify:rdIndex', 'browserify:lib', 'browserify:debugRemoteDisplay', 'browserify:coffeeChat']
-  grunt.registerTask 'debug', ['dist']
+  grunt.registerTask 'default', ['dist']
