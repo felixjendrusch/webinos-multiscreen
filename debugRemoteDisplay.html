@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>DEBUG</title>
+		<style>
+			body{
+				width: 100%; height: 100%;
+				margin: 0;
+				position: absolute;
+				top: 0; left: 0; right: 0; bottom: 0;
+			}
+			input{width: 300px;}
+			textarea{width: 350px; height: 200px;}
+		</style>
+		<script type="text/javascript" src="vendor/jquery.js"></script>
+		<script type="text/javascript" src="dist/debugRemoteDisplay.js"></script>
+	</head>
+
+	<body>
+		<div >
+			<button id="showRemoteDisplays">show Remote Displays</button><button id="identifyButton">identify</button><button id="backToDefault">back to default</button>
+			<table id="remoteDisplayTable" border="1px">
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>Device</th>
+						<th>ID</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<br>
+			<br>
+			<div>
+				<p>connectedDisplays: 
+					<select id="connectedDisplays"></select>
+				</p>
+				<p>msg: <input id="msg" type="text"></p>
+				<p>msgType: 
+					<select id="msgType">
+						<option value="msg">Message</option>
+						<option value="url">new URL</option>
+					</select>
+					<button id="sendMsgButton">send</button>
+				</p>
+				<textarea id="textArea"></textarea>
+			</div>
+		</div>
+		
+	</body>
+</html>

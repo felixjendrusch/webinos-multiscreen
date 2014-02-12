@@ -62,13 +62,6 @@ $(document).ready ->
 		for display, i in rd.getAvailableDisplays()
 			display.identify ++i
 
-	$('#scgButton').on "click", ->
-		for display in rd.getConnectedDisplays()
-			if display.id is $('#connectedDisplays option:selected').attr("value")
-				display.openUrl "http://localhost:3008"
-				
-	$('#scgrButton').on "click", ->
-		for display in rd.getConnectedDisplays()
-			if display.id is $('#connectedDisplays option:selected').attr("value")
-				display.openUrl "http://localhost:3008/rd/smartcityremote.html"
-
+	$('#backToDefault').on "click", ->
+		console.log "backToDefault"
+		window.open("defaultRemoteDisplay.html","_self");

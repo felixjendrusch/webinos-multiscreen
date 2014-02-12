@@ -36,9 +36,9 @@ module.exports = (grunt) ->
         options:
           transform: ['coffeeify']
 
-      defaultRemoteDisplay:
-        src: ['src/defaultRemoteDisplay.coffee']
-        dest: 'dist/defaultRemoteDisplay.js'
+      debugRemoteDisplay:
+        src: ['src/debugRemoteDisplay.coffee']
+        dest: 'dist/debugRemoteDisplay.js'
         options:
           transform: ['coffeeify']
 
@@ -60,12 +60,12 @@ module.exports = (grunt) ->
     watch:
       all:
         files: ['src/**/*.coffee', 'src/**/*.js']
-        tasks: ['browserify:rdIndex', 'browserify:lib', 'browserify:defaultRemoteDisplay', 'browserify:coffeeChat']
+        tasks: ['browserify:rdIndex', 'browserify:lib', 'browserify:debugRemoteDisplay', 'browserify:coffeeChat']
 
   grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-watch'
 
-  grunt.registerTask 'dist', ['clean:dist', 'browserify:deps', 'browserify:rdIndex', 'browserify:lib', 'browserify:defaultRemoteDisplay', 'browserify:coffeeChat']
-  grunt.registerTask 'default', ['dist']
+  grunt.registerTask 'dist', ['clean:dist', 'browserify:deps', 'browserify:rdIndex', 'browserify:lib', 'browserify:debugRemoteDisplay', 'browserify:coffeeChat']
+  grunt.registerTask 'debug', ['dist']
