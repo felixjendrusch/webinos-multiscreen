@@ -63,5 +63,4 @@ $(document).ready ->
 			display.identify ++i
 
 	$('#backToDefault').on "click", ->
-		console.log "backToDefault"
 		window.open("defaultRemoteDisplay.html","_self");
