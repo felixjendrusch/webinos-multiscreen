@@ -1,7 +1,7 @@
 
 class RemoteDisplayLib
 
-	constructor: ->
+	constructor: (@grdCB)->
 		channel = new MessageChannel()
 		@port = channel.port1
 		@availableDisplays = []
@@ -9,7 +9,6 @@ class RemoteDisplayLib
 		parent.postMessage("rdInit", "http://localhost:8080", [channel.port2])
 
 		@port.onmessage = (evt) =>
-			console.log("lib onmessage " + evt.data[0], evt.data[1])
 			switch
 				when evt.data[0] is "displayList"
 					newAvailableDisplay = []
@@ -36,18 +35,11 @@ class RemoteDisplayLib
 							@connectedDisplays.splice @connectedDisplays.indexOf(connectedDisplay), 1
 							@ctrdCB?()
 
-
-					window.clearTimeout(@refreshTimer)
-					@refreshTimer = window.setTimeout( =>
-						@port.postMessage ["getRemoteDisplays"]
-					,10000)
-
 				when evt.data[0] is "receiveMsg"
 					for display in @connectedDisplays
 						if display.id is evt.data[1]
 							display.handleEvent [evt.data[2]]
 
- 
 
 	getRemoteDisplays: (@grdCB) =>
 		@port.postMessage ["getRemoteDisplays"]
@@ -64,15 +56,15 @@ class RemoteDisplayLib
 	disconnectFromRemoteDisplay: (id, @dfrdCB) =>
 		for display in @connectedDisplays
 			if display.id is id
-				@connectedDisplays.splice @connectedDisplays.indexOf(display), 1
-				@dfrdCB?()
+				if @connectedDisplays.indexOf(display) isnt -1
+					@connectedDisplays.splice @connectedDisplays.indexOf(display), 1
+					@dfrdCB?()
+					return true
 
 	controlRemoteDisplay: (id) =>
-		for display in @connectedDisplays
+		for display in @availableDisplays
 			if display.id is id
 				@port.postMessage ["control", id]
-
-
 
 	getAvailableDisplays:  =>
 		@availableDisplays

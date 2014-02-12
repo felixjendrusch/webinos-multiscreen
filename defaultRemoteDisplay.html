@@ -18,36 +18,36 @@
 	</head>
 
 	<body>
-		<button id="showRemoteDisplays">show Remote Displays</button><button id="identifyButton">identify</button>
-		<table id="remoteDisplayTable" border="1px">
-			<thead>
-				<tr>
-					<th>No.</th>
-					<th>Device</th>
-					<th>Address</th>
-					<th>ID</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
-		<br>
-		<br>
-		<div>
-			<p>connectedDisplays: 
-				<select id="connectedDisplays"></select>
-				<button id='controlButton'>control</button>
-				<button id='disconnectButton'>disconnect</button>
-			</p>
-			<p>msg: <input id="msg" type="text"></p>
-			<p>msgType: 
-				<select id="msgType">
-					<option value="msg">Message</option>
-					<option value="url">new URL</option>
-				</select>
-				<button id="sendMsgButton">send</button><button id="scgButton">scg</button><button id="scgrButton">scgr</button>
-			</p>
-			<textarea id="textArea"></textarea>
+		<div >
+			<button id="showRemoteDisplays">show Remote Displays</button><button id="identifyButton">identify</button>
+			<table id="remoteDisplayTable" border="1px">
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>Device</th>
+						<th>ID</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<br>
+			<br>
+			<div>
+				<p>connectedDisplays: 
+					<select id="connectedDisplays"></select>
+				</p>
+				<p>msg: <input id="msg" type="text"></p>
+				<p>msgType: 
+					<select id="msgType">
+						<option value="msg">Message</option>
+						<option value="url">new URL</option>
+					</select>
+					<button id="sendMsgButton">send</button><button id="scgButton">scg</button><button id="scgrButton">scgr</button>
+				</p>
+				<textarea id="textArea"></textarea>
+			</div>
 		</div>
+		
 	</body>
 </html>

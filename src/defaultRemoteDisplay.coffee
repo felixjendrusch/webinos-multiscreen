@@ -6,33 +6,49 @@ $(document).ready ->
 	showRemoteDisplayList = (remoteDisplays) ->
 		$('#remoteDisplayTable > tbody:last').empty()
 		for display, i in remoteDisplays
-			$('#remoteDisplayTable > tbody:last').append "<tr><td>" + ++i + "</td><td>" + display.displayName + "</td><td>" + display.address + "</td><td>" + display.id + "<td><button value='" + display.id + "' class='connectButton'>connect...</button></td>"
-	
-	connectedToDisplay = ->
+			newLine = 
+			"<tr>
+				<td>" + ++i + "</td>
+				<td>" + display.displayName + "</td>
+				<td>" + display.id + "</td>
+				<td>
+					<button value='" + display.id + "' class='connectButton'>connect</button>
+					<button value='" + display.id + "' class='disconnectButton'>disconnect</button>
+					<button value='" + display.id + "' class='controlButton'>control</button>
+				</td>"
+			$('#remoteDisplayTable > tbody:last').append newLine
+		refreshConnectedDisplays()
+
+	refreshConnectedDisplays = ->
 		$('#connectedDisplays').empty()
+		$('#remoteDisplayTable > tbody > tr').css("background-color", "")
 		for display in rd.getConnectedDisplays()
 			$('#connectedDisplays').append "<option value=" + display.id + ">" + display.id + "</option>"
+			for row in $('#remoteDisplayTable > tbody > tr')
+				if $(row).children('td:eq(2)').text() is display.id
+					$(row).css("background-color", "lightgreen")
 
 	receiveMsg = (msg) ->
 		textArea = $('#textArea')
-		textArea.val textArea.val() + JSON.parse(msg) + "\n"
+		textArea.val textArea.val() + msg + "\n"
 		textArea.scrollTop textArea.prop('scrollHeight')
 
 
-	rd = new RemoteDisplayLib()
+	rd = new RemoteDisplayLib(showRemoteDisplayList)
 	$('#showRemoteDisplays').on "click", ->
 		rd.getRemoteDisplays showRemoteDisplayList
 
 	$('#remoteDisplayTable').on "click", ".connectButton", ->
-		newDisplay = rd.connectToRemoteDisplay $(this).attr("value"), connectedToDisplay
+		newDisplay = rd.connectToRemoteDisplay $(this).attr("value"), refreshConnectedDisplays
 		if newDisplay?
 			newDisplay.addEventListener "message", receiveMsg
 
-	$('#disconnectButton').on "click", ->
-		rd.disconnectFromRemoteDisplay $('#connectedDisplays option:selected').attr("value"), connectedToDisplay
+	$('#remoteDisplayTable').on "click", ".disconnectButton", ->
+		rd.disconnectFromRemoteDisplay $(this).attr("value"), refreshConnectedDisplays
 
-	$('#controlButton').on "click", ->
-		rd.controlRemoteDisplay $('#connectedDisplays option:selected').attr("value")
+	$('#remoteDisplayTable').on "click", ".controlButton", ->
+		rd.controlRemoteDisplay $(this).attr("value")
+
 
 	$('#sendMsgButton').on "click", ->
 		for display in rd.getConnectedDisplays()

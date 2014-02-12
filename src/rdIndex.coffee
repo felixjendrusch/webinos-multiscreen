@@ -4,31 +4,37 @@ DeviceManager = require('./device.coffee')
 
 $(document).ready ->
 	curtime = Date.now()
-	lastEvent  = {
+
+	lastEventData  = {
 				posX: 0
 				posY: 0
-				rotarotation: 1
+				rotation: 0
 				scale: 1
+
 			}
+	posX=posY=rotation=0
+	scale=1
 	remoteDisplays = []
-	port =[]
+	port = undefined
 	firstTime = true
 	activPeer = null
-	$('#identify').css "font-size", $('#ifr').height()*0.9
 
+	$('#identify').css "font-size", $('#ifr').height()*0.8
 	$('#cancelControl').on "click", (event) ->
 		event.stopPropagation()
 		$('#control').css "z-index", "-1"
 
 	$('#resetControl').on "click", (event) ->
 		event.stopPropagation()
-		lastEvent = {
+		lastEventData = {
 				posX: 0
 				posY: 0
-				rotarotation: 1
+				rotation: 0
 				scale: 1
 			}
-		activPeer.send "remoteDisplay", ["msg", lastEvent]	
+		posX=posY=rotation=0
+		scale=1
+		activPeer.send "remoteDisplay", ["msg", lastEventData]	
 
 	manager = new DeviceManager()
 	manager
@@ -45,7 +51,10 @@ $(document).ready ->
 							if msg.type is "remoteDisplay"
 								switch
 									when msg.content[0] is "url"
-										$('#ifr > iframe').attr('src', msg.content[1])
+										if msg.content[1].substring(0,7) is "http://" or msg.content[1].substring(0,8) is "https://"
+											$('#ifr > iframe').attr('src', msg.content[1])
+										else
+											$('#ifr > iframe').attr('src', "http://" + msg.content[1])
 
 									when msg.content[0] is "msg"
 										port.postMessage ["receiveMsg", msg.from.id, msg.content[1]]
@@ -58,6 +67,7 @@ $(document).ready ->
 										, 1000
 				else
 					remoteDisplays.push peer
+			port?.postMessage ["displayList", normalizePeers(remoteDisplays)]
 
 
 	control = (peer) ->
@@ -80,46 +90,39 @@ $(document).ready ->
 			drag_block_vertical: true,
 			drag_min_distance: 0
 		});
-
-		posX=0
-		posY=0
-		scale=last_scale=1
-		rotation=last_rotation=1
-
-		hammertime.on "drag transform release", (event) ->
+		
+		hammertime.on "touch drag transform", (event) ->
 			touches = event.gesture.touches
 			switch event.type
+				when 'touch'
+					lastEventData.posX = posX
+					lastEventData.posY = posY
+					lastEventData.rotation = rotation
+					lastEventData.scale = scale
+
 				when 'drag'
-					posX = event.gesture.deltaX
-					posY = event.gesture.deltaY
+					posX = event.gesture.deltaX + lastEventData.posX
+					posY = event.gesture.deltaY + lastEventData.posY
 
 				when 'transform'
-					rotation = event.gesture.rotation
-					scale = event.gesture.scale
+					rotation = event.gesture.rotation + lastEventData.rotation
+					scale = Math.max(1, Math.min(lastEventData.scale* event.gesture.scale, 10))
 
-				when 'release'
-					lastposX=posX
-					lastposY=posY
-# 
 			eventData = {
 				posX: posX
 				posY: posY
 				rotation: rotation
 				scale: scale
 			}
-			lastEvent.posX = eventData.posX
-			lastEvent.posY = eventData.posY
-			lastEvent.rotation = eventData.rotation
-			lastEvent.scale = eventData.scale
+
 			if(curtime<Date.now()-100)
 				curtime = Date.now()
-				activPeer.send "remoteDisplay", ["msg", lastEvent]
+				activPeer.send "remoteDisplay", ["msg", eventData]
 
 
 	normalizePeers = (peers) ->
 		normalizedPeers = []
 		for peer in peers
-			console.log(peer);
 			normalizedPeers.push
 				address: peer.address()
 				displayName: address.friendlyName(peer.address());
@@ -133,7 +136,6 @@ $(document).ready ->
 		if evt.data is "rdInit" and evt.ports?
 			port = evt.ports[0]
 			port.onmessage = (evt) =>
-				console.log "app onmessage " + evt.data[0]
 				switch
 					when evt.data[0] is "getRemoteDisplays"
 						port.postMessage ["displayList", normalizePeers(remoteDisplays)]

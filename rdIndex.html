@@ -19,6 +19,35 @@
 			}
 			#control, #identify {z-index: -1;}
 			#ifr {z-index: 1}
+			.button {
+				-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+				background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+				background-color:#ededed;
+				-webkit-border-top-left-radius:6px;
+				-webkit-border-top-right-radius:6px;
+				-webkit-border-bottom-right-radius:6px;
+				-webkit-border-bottom-left-radius:6px;
+				text-indent:0;
+				border:1px solid #dcdcdc;
+				display:inline-block;
+				color:#777777;
+				font-family:arial;
+				font-size:20px;
+				font-weight:bold;
+				font-style:normal;
+				height:50px;
+				line-height:50px;
+				min-width: 90px;
+				width:20%;
+				text-decoration:none;
+				text-align:center;
+				text-shadow:1px 1px 0px #ffffff;
+				margin: 3px 0;
+				}
+				.button:hover {
+					background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+					background-color:#dfdfdf;
+				}
 		</style>
 		<script type="text/javascript" src="/webinos.js"></script>
 		<script type="text/javascript" src="dist/deps.js"></script>
@@ -30,7 +59,7 @@
 	</head>
 	<body>
 		<div id="control">
-			<button id="cancelControl">cancel</button><button id="resetControl">reset</button>
+			<button id="cancelControl" class="button">cancel</button><button id="resetControl" class="button">reset</button>
 		</div>
 		<div id="ifr" >
 			<iframe src="defaultRemoteDisplay.html"></iframe>
