@@ -1,9 +1,5 @@
 
 $(document).ready(function() {
-	rd = new RemoteDisplayLib();
-	setTimeout(function() {
-		rd.getRemoteDisplays(connectToAllDisplays);
-	}, 5000);
 
 	connectToAllDisplays = function(remoteDisplays) {
 	 	var availableDisplays = remoteDisplays;
@@ -12,9 +8,10 @@ $(document).ready(function() {
 	 	for (var i=0; i<availableDisplays.length; i++){
 	 		var alreadyConnected = false;
 	 		for(var j=0; j<connectedDisplays.length; j++){
-	 			if(availableDisplays[i].id === connectedDisplays[j].id)
+	 			if(availableDisplays[i].id === connectedDisplays[j].id){
 	 				alreadyConnected = true;
 	 				break;
+	 			}
 	 		}
 	 		if(!alreadyConnected){
 	 			var newDisplay = rd.connectToRemoteDisplay(availableDisplays[i].id);
@@ -25,9 +22,8 @@ $(document).ready(function() {
 	 	$('#connectedDisplays').empty();
 	 	$('#connectedDisplays').append("<option value=0>all</option>");
 	 	connectedDisplays = rd.getConnectedDisplays();
-	 	for(var h=0; h<connectedDisplays; h++){
-	 		var display = connectedDisplays[h];
-	 		$('#connectedDisplays').append("<option value=" + display.id + ">" + display.id + "</option>");
+	 	for(var h=0; h<connectedDisplays.length; h++){
+	 		$('#connectedDisplays').append("<option value=" + connectedDisplays[h].id + ">" + connectedDisplays[h].id + "</option>");
 	 	}
 	};
 
@@ -35,6 +31,12 @@ $(document).ready(function() {
 	 	var textArea = $('#textArea');
 		textArea.val(textArea.val() + msg + "\n");
 	};
+
+	rd = new RemoteDisplayLib(connectToAllDisplays);
+	setTimeout(function() {
+		rd.getRemoteDisplays(connectToAllDisplays);
+	}, 5000);
+
 
 	$('#sendMsgButton').on("click", function(){
 		msgTarget = $('#connectedDisplays option:selected').attr("value");

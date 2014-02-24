@@ -3,12 +3,6 @@ RemoteDisplayLib = require('./lib.coffee')
 
 $(document).ready ->
 
-	rd = new RemoteDisplayLib()
-
-	setTimeout ->
-		rd.getRemoteDisplays connectToAllDisplays
-	, 5000
-
 	connectToAllDisplays = (remoteDisplays) ->
 		for availableDisplay in remoteDisplays
 			alreadyConnected = false
@@ -28,6 +22,13 @@ $(document).ready ->
 	receiveMsg = (msg) ->
 		textArea = $('#textArea')
 		textArea.val textArea.val() + msg + "\n"
+
+
+	rd = new RemoteDisplayLib(connectToAllDisplays)
+	setTimeout ->
+		rd.getRemoteDisplays connectToAllDisplays
+	, 5000
+
 
 
 	$('#sendMsgButton').on "click", ->
